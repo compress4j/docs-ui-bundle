@@ -1,0 +1,17 @@
+footer.footer {
+  font-size: 0.85rem;
+  background-color: #e6e6e6;
+  color: #8e8e8e;
+  padding: 0.5rem 1rem;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 17px;
+  color: #8d8d8d;
+  font-family: "Open Sans", Helvetica, Arial;
+}
+
+.footer a {
+  color: #5d5d5d;
+}

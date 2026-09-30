@@ -1,0 +1,13 @@
+<footer class="flex flex-col bg-fp-gray-lightest dark:bg-fp-blue-darkest dark:text-fp-gray-light text-sm dark:border-t dark:border-gray-800">
+  <section class="pt-2 pb-6 px-2">
+    <p class="text-center">
+      <a href="https://github.com/compress4j" class="text-fp-gray-darkest dark:text-fp-gray transition duration-300 ease-in-out hover:text-fp-gray dark:hover:text-fp-gray-light">compress4j</a>
+      on GitHub
+    </p>
+    <p class="text-center text-xs text-fp-gray-dark">
+      {{~#if env.ANTORA_DATE}}Last build: {{{env.ANTORA_DATE}}} {{/if~}}
+      {{~#if page.attributes.creation-date}} | Page creation date: {{{page.attributes.creation-date}}} {{/if~}}
+      {{~#if page.attributes.last-updated}} | Last content update: {{{page.attributes.last-updated}}} {{/if~}}
+    </p>
+  </section>
+</footer>

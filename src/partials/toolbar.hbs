@@ -1,0 +1,10 @@
+<div class="toolbar bg-fp-gray-lightest dark:bg-fp-blue-darkest dark:text-gray-300 dark:border-b dark:border-gray-800" role="navigation">
+{{> nav-toggle}}
+  {{#with site.homeUrl}}
+  <a href="{{{relativize this}}}" class="toolbar-icon home-link{{#if @root.page.home}} is-current{{/if}}"></a>
+  {{/with}}
+{{> breadcrumbs}}
+{{> page-languages}}
+{{> page-versions}}
+{{> edit-this-page}}
+</div>

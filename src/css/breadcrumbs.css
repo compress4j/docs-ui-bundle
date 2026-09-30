@@ -1,0 +1,43 @@
+.crumbs {
+  flex: 1 1;
+  padding: 0 0.5rem 0 0.75rem;
+  line-height: 1.35;
+  hyphens: none;
+}
+
+.crumbs ul {
+  display: none;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: #0275d8;
+}
+
+@media (min-width: 1024px) {
+  .crumbs {
+    display: block;
+  }
+
+  .crumbs ul {
+    display: flex;
+  }
+}
+
+a + .crumbs {
+  padding-left: 0.05rem;
+}
+
+.crumbs li {
+  display: inline;
+  margin: 0;
+}
+
+.crumbs li::after {
+  content: "/";
+  padding: 0 0.5rem;
+}
+
+.crumbs li:last-of-type::after {
+  content: none;
+}

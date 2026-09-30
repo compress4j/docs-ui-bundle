@@ -1,0 +1,6 @@
+rules:
+  superfluous-actions:
+    ignore:
+      # `gh release` has no single create-or-update command, so replacing this
+      # step needs view/create/edit/upload branching for the overwritten `latest` tag.
+      - release.yml

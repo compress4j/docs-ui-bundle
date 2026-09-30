@@ -1,0 +1,18 @@
+#contributing {
+    text-align: center;
+    margin: 40px;
+    padding: 10px;
+}
+
+#contributing h3{
+    font-size: 1em;
+    margin: 0px;
+}
+
+#contributing p.contributors {
+    margin: 0;
+}
+
+#contributing p.contribute {
+    /*font-weight: bold;*/
+}

@@ -1,0 +1,17 @@
+<main class="article">
+{{> toolbar}}
+  <div class="content">
+{{#if (eq page.layout '404')}}
+{{> article-404}}
+{{else if (eq page.layout 'category')}}
+{{#if page.attributes.tag}}
+{{> tag}}
+{{else}}
+{{> category}}
+{{/if}}
+{{else}}
+{{> toc}}
+{{> article}}
+{{/if}}
+  </div>
+</main>

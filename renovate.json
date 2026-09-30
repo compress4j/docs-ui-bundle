@@ -1,0 +1,20 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "github>austek/renovate-config"
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "eslint"
+      ],
+      "allowedVersions": "<10"
+    },
+    {
+      "matchPackageNames": [
+        "@asciidoctor/core"
+      ],
+      "allowedVersions": "<3"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{{#if site.keys.googleAnalytics}}
+{{#with site.keys.googleAnalytics}}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{this}}"></script>
+    <script>dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)};gtag('js',new Date());gtag('config','{{this}}')</script>
+{{/with}}
+{{/if}}
+    <script>if (localStorage.darkmode === 'true' || (!('darkmode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark');} else {document.documentElement.classList.remove('dark');}</script>
