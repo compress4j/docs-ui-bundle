@@ -1,3 +1,5 @@
 'use strict'
 
-module.exports = (obj) => obj || []
+module.exports = function toArray (obj) {
+  return obj || []
+}

@@ -1,7 +1,7 @@
 'use strict'
 
-module.exports = (editUrl, options) => {
-  var ret = ''
+module.exports = function howtos (editUrl, options) {
+  let ret = ''
   if (!editUrl) return ret
   let howtos = null
   if (options.data.root.site.keys) {

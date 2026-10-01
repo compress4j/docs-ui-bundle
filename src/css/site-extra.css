@@ -3,7 +3,6 @@
 }
 
 .alert {
-  /* display: flex; */
   background-color: #ffdfcf;
   border-radius: .35rem;
   border: 1px solid transparent;
@@ -99,12 +98,7 @@ nav a:hover {
 }
 
 .tabpanel {
-  @apply dark:bg-fp-blue-darkest;
-}
-
-.tabpanel {
-  @apply dark:border-fp-gray-darkest dark:rounded-b;
-
+  @apply dark:bg-fp-blue-darkest dark:border-fp-gray-darkest dark:rounded-b;
 }
 
 .tabs.is-loading .tablist li:first-child::after,
@@ -123,7 +117,6 @@ nav a:hover {
 }
 
 #preamble .abstract blockquote {
-  /* @apply dark:bg-fp-blue-darkest text-black dark:text-white; */
   background-color: inherit;
   color: inherit;
   border-style: none solid;

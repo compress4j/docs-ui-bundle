@@ -1,3 +1,5 @@
 'use strict'
 
-module.exports = (a, b) => a > b
+module.exports = function gt (a, b) {
+  return a > b
+}

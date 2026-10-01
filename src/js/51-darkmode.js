@@ -1,8 +1,8 @@
 ;(function () {
   'use strict'
 
-  var toggle = document.querySelector('#themeSwitch')
-  var ls = window.localStorage
+  const toggle = document.querySelector('#themeSwitch')
+  const ls = window.localStorage
   if (!toggle) return
 
   toggle.addEventListener('click', function (e) {

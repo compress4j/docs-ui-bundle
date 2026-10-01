@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-  var navbarToggles = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0)
+  const navbarToggles = Array.from(document.querySelectorAll('.navbar-burger'))
   if (navbarToggles.length === 0) return
   navbarToggles.forEach(function (el) {
     el.addEventListener('click', function (e) {

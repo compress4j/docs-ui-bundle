@@ -1,12 +1,18 @@
-FROM fedora:latest
+FROM fedora:44
 
 RUN dnf -y install nodejs npm && \
     dnf clean all
 
 WORKDIR /antora
-RUN npm install -g gulp-cli
-ADD package*.json .
-RUN npm install
+RUN npm install -g --ignore-scripts gulp-cli@3.1.0
+COPY package.json package-lock.json ./
+RUN npm ci --ignore-scripts && npm rebuild gifsicle mozjpeg optipng-bin
 
-ADD . /antora
+COPY gulpfile.js .gulp.json .stylelintrc eslint.config.js tailwind.config.js ./
+COPY gulp.d gulp.d
+COPY src src
+COPY preview-src preview-src
+
+RUN useradd --system --no-create-home antora && chown -R antora /antora
+USER antora
 ENTRYPOINT ["gulp"]

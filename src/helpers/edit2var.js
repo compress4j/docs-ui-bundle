@@ -1,30 +1,36 @@
 'use strict'
 
-module.exports = (editUrl, type) => {
-  if (!editUrl || !type) return false
-  if (editUrl.includes('://github.com/')) {
-    if (type === 'issue') return editUrl.replace(/\/edit\/(\w+)\/(.*)$/, '/issues/new?title=[$1] Doc issue in file $2')
-    if (type === 'history') return editUrl.replace(/\/edit\//, '/commits/')
-  }
-  if (editUrl.includes('://pagure.io/')) {
-    if (type === 'issue') {
-      return editUrl.replace(/\/blob\/(\w+)\/f\/(.*)$/, '/new_issue?title=[$1] Doc issue in file $2')
-    }
-    if (type === 'history') {
-      const m = editUrl.match(/(.*)\/blob\/(\w+)\/f\/(.*)$/)
-      return `${m[1]}/history/${m[3]}?identifier=${m[2]}`
-    }
-  }
-  if (editUrl.includes('://gitlab.com/')) {
-    if (type === 'issue') {
-      return editUrl.replace(/\/edit\/(\w+)\/(.*)$/, '/issues/new?issue[title]=[$1] Doc issue in file $2')
-    }
-    if (type === 'history') return editUrl.replace(/\/edit\//, '/commits/')
-  }
-  if (editUrl.includes('://forge.fedoraproject.org/')) {
-    if (type === 'issue') return editUrl.replace(/\/src\/branch\/(\w+)\/(.*)$/, '/issues/new?title=[$1] Doc issue in file $2')
-    if (type === 'history') return editUrl.replace(/\/src\//, '/commits/')
-  }
+const commitsFromEdit = (url) => url.replace(/\/edit\//, '/commits/')
 
-  return false
+const HOSTS = [
+  {
+    marker: '://github.com/',
+    issue: (url) => url.replace(/\/edit\/(\w+)\/(.*)$/, '/issues/new?title=[$1] Doc issue in file $2'),
+    history: commitsFromEdit,
+  },
+  {
+    marker: '://pagure.io/',
+    issue: (url) => url.replace(/\/blob\/(\w+)\/f\/(.*)$/, '/new_issue?title=[$1] Doc issue in file $2'),
+    history: (url) => {
+      const m = /\/blob\/(\w+)\/f\/(.*)$/.exec(url)
+      return m ? `${url.slice(0, m.index)}/history/${m[2]}?identifier=${m[1]}` : false
+    },
+  },
+  {
+    marker: '://gitlab.com/',
+    issue: (url) => url.replace(/\/edit\/(\w+)\/(.*)$/, '/issues/new?issue[title]=[$1] Doc issue in file $2'),
+    history: commitsFromEdit,
+  },
+  {
+    marker: '://forge.fedoraproject.org/',
+    issue: (url) => url.replace(/\/src\/branch\/(\w+)\/(.*)$/, '/issues/new?title=[$1] Doc issue in file $2'),
+    history: (url) => url.replace(/\/src\//, '/commits/'),
+  },
+]
+
+module.exports = function edit2var (editUrl, type) {
+  if (!editUrl || !type) return false
+  const host = HOSTS.find(({ marker }) => editUrl.includes(marker))
+  const build = host?.[type]
+  return typeof build === 'function' ? build(editUrl) : false
 }

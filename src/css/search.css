@@ -75,7 +75,7 @@
 }
 
 .search-result-document-hit .search-result-highlight {
-  color: #174d8c;
+  color: #0f3d73;
   background: rgb(143 187 237 / 10%);
   padding: 0.1em 0.05em;
   font-weight: 500;
@@ -96,18 +96,6 @@
   font-weight: bold;
 }
 
-#search-input {
-}
-
 #search-input:focus {
   outline: none;
-}
-
-#search-field {
-}
-
-#search-field .filter {
-}
-
-#search-field.has-filter > input {
 }

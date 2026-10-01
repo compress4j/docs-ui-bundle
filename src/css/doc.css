@@ -14,7 +14,7 @@
 }
 
 .toc .title{
-  font-family: "Open Sans", Helvetica, Arial;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
   font-size: 24px;
   color: #191919;
   font-weight: 600;
@@ -40,18 +40,18 @@ article.doc h1 {
 }
 
 ul.nav-list {
-  font-family: "Open Sans", Helvetica, Arial;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
 }
 
 
 .doc h3 {
-  font-family: "Open Sans", Helvetica, Arial;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
   font-size: 24px;
 }
 
 /* Add an H4 heading to fix issues with H4 content displaying same size as H2 */
 .doc h4 {
-  font-family: "Open Sans", Helvetica, Arial;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
   font-size: 20px;
 }
 
@@ -107,11 +107,9 @@ ul.nav-list {
   font-size: 0.9em;
   padding: 0.075rem 0.25rem 0.125rem;
   border-radius: 0.2rem;
-  /* font-weight: 300; */
 }
 
 .doc pre {
-  /* color: #000; */
   font-size: 0.9rem;
   line-height: 1.5;
   margin: 0;
@@ -148,6 +146,8 @@ ul.nav-list {
 
 .doc table.tableblock {
   font-size: 0.8rem;
+  border-collapse: collapse;
+  margin: 2rem 0;
 }
 
 .doc .tablecontainer,
@@ -163,14 +163,6 @@ ul.nav-list {
 
 .doc td.tableblock > .content > :first-child {
   margin-top: 0;
-}
-
-.doc table.tableblock {
-  border-collapse: collapse;
-  margin: 2rem 0;
-  /* enable table-layout: fixed if you want the table width to be enforced strictly */
-  /* alternative is to wrap table in div and set overflow-x: auto on the wrapper */
-  /* table-layout: fixed; */
 }
 
 .doc table.spread {
@@ -375,8 +367,6 @@ ul.nav-list {
 .doc .admonitionblock .icon i {
   display: inline-flex;
   align-items: center;
-  /* height: 100%; */
-  /* height value causing issues in Chrome, pushing admonition icon and text too high and off center */
 }
 
 .doc .admonitionblock .icon i::after {
@@ -439,14 +429,6 @@ article.doc h2 {
   -ms-hyphens: none;
   hyphens: none;
 }
-
-/*
-.doc .ulist .paragraph,
-.doc .olist .paragraph {
-  margin: 0;
-  padding: 0;
-}
-*/
 
 #preamble .abstract blockquote {
   background: var(--abstract-background);
@@ -580,12 +562,6 @@ article.doc h2 {
   padding-bottom: 0.075rem;
 }
 
-/*
-.doc .tableblock caption {
-  text-align: left;
-}
-*/
-
 .doc .tableblock caption {
   font-style: normal;
 }
@@ -666,13 +642,6 @@ article.doc h2 {
 .doc .listingblock:hover .source-toolbox {
   visibility: visible;
 }
-
-/*
-.doc .source-toolbox .source-lang {
-  text-transform: uppercase;
-  letter-spacing: 0.075em;
-}
-*/
 
 .doc .source-toolbox > :not(:last-child)::after {
   content: "|";
@@ -797,7 +766,6 @@ article.doc h2 {
 }
 
 .doc .conum[data-value] {
-  /* border: 1px solid #989898; */
   border: 1px solid #404040;
   border-radius: 100%;
   display: inline-block;
@@ -820,31 +788,9 @@ article.doc h2 {
   display: none;
 }
 
-.doc .colist {
-  font-size: 0.95rem;
-}
-
 .doc .colist > table tr > td:first-of-type {
   padding: 0 0.75em;
   line-height: 1;
-}
-
-.doc td.hdlist1,.doc td.hdlist2 {
-  padding: .5rem 0 0;
-  vertical-align: top
-}
-
-.doc tr:first-child>.hdlist1,.doc tr:first-child>.hdlist2 {
-  padding-top: 0
-}
-
-.doc td.hdlist1 {
-  font-weight: 600;
-  padding-right: .25rem
-}
-
-.doc td.hdlist2 {
-  padding-left: .25rem
 }
 
 .doc hr {

@@ -7,7 +7,7 @@ const concat = require('gulp-concat')
 const cssnano = require('cssnano')
 const fs = require('fs-extra')
 const merge = require('../lib/merge-streams')
-const ospath = require('path')
+const ospath = require('node:path')
 const path = ospath.posix
 const postcss = require('gulp-postcss')
 const postcssCalc = require('postcss-calc')
@@ -15,13 +15,17 @@ const postcssImport = require('postcss-import')
 const postcssUrl = require('postcss-url')
 const postcssVar = require('postcss-custom-properties')
 const tailwindcss = require('@tailwindcss/postcss')
-const { Readable, Transform } = require('stream')
+const { Readable, Transform } = require('node:stream')
 const map = (transform) => new Transform({ objectMode: true, transform })
 const through = () => map((file, enc, next) => next(null, file))
 const uglify = require('gulp-uglify')
 const vfs = require('vinyl-fs')
 
-module.exports = (src, dest, preview) => () => {
+module.exports = function build (src, dest, preview) {
+  return () => run(src, dest, preview)
+}
+
+function run (src, dest, preview) {
   const opts = { base: src, cwd: src }
   const binaryOpts = { ...opts, encoding: false }
   const sourcemaps = preview || process.env.SOURCEMAPS === 'true'
@@ -33,15 +37,12 @@ module.exports = (src, dest, preview) => () => {
         messages
           .reduce((accum, { file: depPath, type }) => (type === 'dependency' ? accum.concat(depPath) : accum), [])
           .map((importedPath) => fs.stat(importedPath).then(({ mtime }) => mtime))
-      ).then((mtimes) => {
-        const newestMtime = mtimes.reduce((max, curr) => (!max || curr > max ? curr : max), file.stat.mtime)
-        if (newestMtime > file.stat.mtime) file.stat.mtimeMs = +(file.stat.mtime = newestMtime)
-      }),
+      ).then((mtimes) => bumpMtime(file, mtimes)),
     postcssUrl([
       {
-        filter: /^src\/css\/[~][^/]*(?:font|face)[^/]*\/.*\/files\/.+[.](?:ttf|woff2?)$/,
+        filter: /^src\/css\/~[^/]*(?:font|face)[^/]*\/.*\/files\/.+\.(?:ttf|woff2?)$/,
         url: (asset) => {
-          const relpath = asset.pathname.substr(1)
+          const relpath = asset.pathname.slice(1)
           const abspath = require.resolve(relpath)
           const basename = ospath.basename(abspath)
           const destpath = ospath.join(dest, 'font', basename)
@@ -61,33 +62,9 @@ module.exports = (src, dest, preview) => () => {
   const mermaidDist = fs.readFileSync(require.resolve('mermaid/dist/mermaid.min.js'))
   const withMermaid = (bundleBuffer) => Buffer.concat([mermaidDist, Buffer.from(';\n'), bundleBuffer])
   // see https://gulpjs.org/recipes/browserify-multiple-destination.html
-  const vendorBundles = map((file, enc, next) => {
-    if (file.relative.endsWith('.bundle.js')) {
-      const mtimePromises = []
-      const bundlePath = file.path
-      const isMermaid = /mermaid/.test(file.relative)
-      const bundler = browserify(file.relative, { basedir: src, detectGlobals: false })
-      bundler.plugin('browser-pack-flat/plugin')
-      bundler
-        .on('file', (bundledPath) => {
-          if (bundledPath !== bundlePath) mtimePromises.push(fs.stat(bundledPath).then(({ mtime }) => mtime))
-        })
-        .bundle((bundleError, bundleBuffer) =>
-          Promise.all(mtimePromises).then((mtimes) => {
-            const newestMtime = mtimes.reduce((max, curr) => (curr > max ? curr : max), file.stat.mtime)
-            if (newestMtime > file.stat.mtime) file.stat.mtimeMs = +(file.stat.mtime = newestMtime)
-            if (bundleBuffer !== undefined) file.contents = isMermaid ? withMermaid(bundleBuffer) : bundleBuffer
-            file.path = file.path.slice(0, file.path.length - 10) + '.js'
-            next(bundleError, file)
-          })
-        )
-    } else {
-      fs.readFile(file.path, 'UTF-8').then((contents) => {
-        file.contents = Buffer.from(contents)
-        next(null, file)
-      })
-    }
-  })
+  const vendorBundles = map((file, enc, next) =>
+    file.relative.endsWith('.bundle.js') ? bundleVendor(file, src, withMermaid, next) : readVendor(file, next)
+  )
   const merged = merge(
     vfs
       .src('js/+([0-9])-*.js', { ...opts, sourcemaps })
@@ -119,6 +96,41 @@ module.exports = (src, dest, preview) => () => {
   const out = merged.pipe(vfs.dest(dest, { sourcemaps: sourcemaps && '.' }))
   merged.on('error', (err) => out.destroy(err))
   return out
+}
+
+function bumpMtime (file, mtimes) {
+  const newest = new Date(Math.max(file.stat.mtime, ...mtimes))
+  if (newest > file.stat.mtime) {
+    file.stat.mtime = newest
+    file.stat.mtimeMs = +newest
+  }
+}
+
+function bundleVendor (file, src, withMermaid, next) {
+  const mtimePromises = []
+  const bundlePath = file.path
+  const isMermaid = /mermaid/.test(file.relative)
+  const bundler = browserify(file.relative, { basedir: src, detectGlobals: false })
+  bundler.plugin('browser-pack-flat/plugin')
+  bundler
+    .on('file', (bundledPath) => {
+      if (bundledPath !== bundlePath) mtimePromises.push(fs.stat(bundledPath).then(({ mtime }) => mtime))
+    })
+    .bundle((bundleError, bundleBuffer) =>
+      Promise.all(mtimePromises).then((mtimes) => {
+        bumpMtime(file, mtimes)
+        if (bundleBuffer !== undefined) file.contents = isMermaid ? withMermaid(bundleBuffer) : bundleBuffer
+        file.path = file.path.slice(0, file.path.length - 10) + '.js'
+        next(bundleError, file)
+      })
+    )
+}
+
+function readVendor (file, next) {
+  fs.readFile(file.path, 'UTF-8').then((contents) => {
+    file.contents = Buffer.from(contents)
+    next(null, file)
+  })
 }
 
 function optimizeImages () {
