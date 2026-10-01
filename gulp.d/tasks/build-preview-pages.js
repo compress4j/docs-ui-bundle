@@ -4,18 +4,22 @@ const Asciidoctor = require('@asciidoctor/core')()
 const fs = require('fs-extra')
 const handlebars = require('handlebars')
 const merge = require('../lib/merge-streams')
-const ospath = require('path')
+const ospath = require('node:path')
 const path = ospath.posix
 const requireFromString = require('require-from-string')
-const { Transform } = require('stream')
+const { Transform } = require('node:stream')
 const map = (transform = () => {}, flush = undefined) => new Transform({ objectMode: true, transform, flush })
 const vfs = require('vinyl-fs')
 const yaml = require('js-yaml')
 
 const ASCIIDOC_ATTRIBUTES = { experimental: '', icons: 'font', sectanchors: '', 'source-highlighter': 'highlight.js' }
 
-module.exports = (src, previewSrc, previewDest, sink = () => map()) => (done) =>
-  Promise.all([
+module.exports = function buildPreviewPages (src, previewSrc, previewDest, sink = () => map()) {
+  return (done) => preview(src, previewSrc, previewDest, sink, done)
+}
+
+function preview (src, previewSrc, previewDest, sink, done) {
+  return Promise.all([
     loadSampleUiModel(previewSrc),
     toPromise(
       merge(compileLayouts(src), registerPartials(src), registerHelpers(src), copyImages(previewSrc, previewDest))
@@ -23,7 +27,7 @@ module.exports = (src, previewSrc, previewDest, sink = () => map()) => (done) =>
   ])
     .then(([baseUiModel, { layouts }]) => {
       const extensions = ((baseUiModel.asciidoc || {}).extensions || []).map((request) => {
-        ASCIIDOC_ATTRIBUTES[request.replace(/^@|\.js$/, '').replace(/[/]/g, '-') + '-loaded'] = ''
+        ASCIIDOC_ATTRIBUTES[request.replace(/^@|\.js$/, '').replaceAll('/', '-') + '-loaded'] = ''
         const extension = require(request)
         extension.register.call(Asciidoctor.Extensions)
         return extension
@@ -53,7 +57,7 @@ module.exports = (src, previewSrc, previewDest, sink = () => map()) => (done) =>
               const pageAttributes = Object.entries(doc.getAttributes())
                 .filter(([name, val]) => name.startsWith('page-'))
                 .reduce((accum, [name, val]) => {
-                  accum[name.substr(5)] = val
+                  accum[name.slice(5)] = val
                   return accum
                 }, {})
               const uiModelAttributes = (uiModel.page.attributes || {})
@@ -84,6 +88,7 @@ module.exports = (src, previewSrc, previewDest, sink = () => map()) => (done) =>
         .on('error', done)
         .pipe(sink())
     )
+}
 
 function loadSampleUiModel (src) {
   return fs.readFile(ospath.join(src, 'ui-model.yml'), 'utf8').then((contents) => yaml.load(contents))
@@ -138,14 +143,16 @@ function resolvePage (spec, context = {}) {
 }
 
 function resolvePageURL (spec, context = {}) {
-  if (spec) return '/' + (spec = spec.split(':').pop()).slice(0, spec.lastIndexOf('.')) + '.html'
+  if (!spec) return undefined
+  const file = spec.split(':').pop()
+  return '/' + file.slice(0, file.lastIndexOf('.')) + '.html'
 }
 
 function transformHandlebarsError ({ message, stack }, layout) {
   const m = stack.match(/^ *at Object\.ret \[as (.+?)\]/m)
   const templatePath = `src/${m ? 'partials/' + m[1] : 'layouts/' + layout}.hbs`
   const err = new Error(`${message}${~message.indexOf('\n') ? '\n^ ' : ' '}in UI template ${templatePath}`)
-  err.stack = [err.toString()].concat(stack.substr(message.length + 8)).join('\n')
+  err.stack = [err.toString()].concat(stack.slice(message.length + 8)).join('\n')
   return err
 }
 

@@ -2,10 +2,12 @@
 
 const vfs = require('vinyl-fs')
 const zip = require('gulp-vinyl-zip')
-const path = require('path')
+const path = require('node:path')
 
-module.exports = (src, dest, bundleName, onFinish) => () =>
-  vfs
-    .src('**/*', { base: src, cwd: src, encoding: false })
-    .pipe(zip.dest(path.join(dest, `${bundleName}-bundle.zip`)))
-    .on('finish', () => onFinish && onFinish(path.resolve(dest, `${bundleName}-bundle.zip`)))
+module.exports = function pack (src, dest, bundleName, onFinish) {
+  return () =>
+    vfs
+      .src('**/*', { base: src, cwd: src, encoding: false })
+      .pipe(zip.dest(path.join(dest, `${bundleName}-bundle.zip`)))
+      .on('finish', () => onFinish && onFinish(path.resolve(dest, `${bundleName}-bundle.zip`)))
+}

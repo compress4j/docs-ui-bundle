@@ -1,3 +1,5 @@
 'use strict'
 
-module.exports = (value) => value.trim().split(',').map((v) => v.trim().toLowerCase())
+module.exports = function tokenize (value) {
+  return value.trim().split(',').map((v) => v.trim().toLowerCase())
+}

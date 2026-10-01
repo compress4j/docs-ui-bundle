@@ -1,10 +1,10 @@
 ;(function () {
   'use strict'
 
-  var toggle = document.querySelector('.page-languages .languages-menu-toggle')
+  const toggle = document.querySelector('.page-languages .languages-menu-toggle')
   if (!toggle) return
 
-  var selector = document.querySelector('.page-languages')
+  const selector = document.querySelector('.page-languages')
 
   toggle.addEventListener('click', function (e) {
     selector.classList.toggle('is-active')

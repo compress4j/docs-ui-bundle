@@ -1,3 +1,5 @@
 'use strict'
 
-module.exports = (a, b) => a || b
+module.exports = function or (a, b) {
+  return a || b
+}

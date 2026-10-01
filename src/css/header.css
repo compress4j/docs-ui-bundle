@@ -46,7 +46,6 @@ body {
 }
 
 .navbar-brand .navbar-item.search {
-  /* flex: auto; */
   justify-content: flex-end;
   padding-left: 0;
 }
@@ -60,9 +59,6 @@ body {
   color: inherit;
 }
 
-
-#search-input {
-}
 
 .navbar-burger {
   background: none;

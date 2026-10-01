@@ -13,10 +13,6 @@ div.homepage-section a.homepage-link-primary h3 {
     font-weight: 400;
 }
 
-div.homepage-section a.homepage-link-secondary p {
-    font-size: 16px;
-}
-
 div.homepage-section a.homepage-link-secondary h3 {
     font-size: 20px;
 }
@@ -35,9 +31,6 @@ div.homepage-section a.homepage-link {
     padding: 16px;
     margin: 10px;
     border-radius: 10px;
-}
-
-.homepage-page {
 }
 
 div.homepage-section a.homepage-link:hover {
@@ -59,11 +52,6 @@ div.homepage-section a.homepage-link-secondary {
     font-size: 0.8em;
     flex: 1 1 200px;
 }
-
-/* div.homepage-section a.homepage-link-secondary:hover {
-    background-color: #f3f3f3;
-    font-size: 0.8em;
-} */
 
 
 
