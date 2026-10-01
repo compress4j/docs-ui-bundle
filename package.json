@@ -8,7 +8,7 @@
     "url": "https://github.com/compress4j/docs-ui-bundle.git"
   },
   "engines": {
-    "node": ">= 8.0.0"
+    "node": ">= 16.0.0"
   },
   "browserslist": [
     "last 2 versions"
