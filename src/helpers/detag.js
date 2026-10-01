@@ -2,5 +2,5 @@
 
 const TAG_ALL_RX = /<[^<>]+>/g
 module.exports = function detag (html) {
-  return html && html.replace(TAG_ALL_RX, '')
+  return html?.replace(TAG_ALL_RX, '')
 }

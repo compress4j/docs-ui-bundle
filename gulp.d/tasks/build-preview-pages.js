@@ -26,7 +26,7 @@ function preview (src, previewSrc, previewDest, sink, done) {
     ),
   ])
     .then(([baseUiModel, { layouts }]) => {
-      const extensions = ((baseUiModel.asciidoc || {}).extensions || []).map((request) => {
+      const extensions = (baseUiModel.asciidoc?.extensions || []).map((request) => {
         ASCIIDOC_ATTRIBUTES[request.replace(/^@|\.js$/, '').replaceAll('/', '-') + '-loaded'] = ''
         const extension = require(request)
         extension.register.call(Asciidoctor.Extensions)

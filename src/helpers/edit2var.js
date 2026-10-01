@@ -31,6 +31,6 @@ const HOSTS = [
 module.exports = function edit2var (editUrl, type) {
   if (!editUrl || !type) return false
   const host = HOSTS.find(({ marker }) => editUrl.includes(marker))
-  const build = host && host[type]
+  const build = host?.[type]
   return typeof build === 'function' ? build(editUrl) : false
 }

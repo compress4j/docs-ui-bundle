@@ -54,7 +54,7 @@
 
   function sectionId (el) {
     if (el.id) return el.id
-    return SECT_CLASS_RX.test(el.className) ? (el.firstElementChild || {}).id : undefined
+    return SECT_CLASS_RX.test(el.className) ? el.firstElementChild?.id : undefined
   }
 
   function findNavLinkByAncestor (targetNode) {

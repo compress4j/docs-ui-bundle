@@ -5,8 +5,7 @@ module.exports = function qdTagPage (tag, { data: { root } }) {
   return contentCatalog.getPages().find(
     (page) =>
       page.src.component === 'quick-docs' &&
-      page.asciidoc.attributes &&
-      page.asciidoc.attributes['page-layout'] === 'category' &&
+      page.asciidoc.attributes?.['page-layout'] === 'category' &&
       page.asciidoc.attributes['page-tag'] === tag
   )
 }
