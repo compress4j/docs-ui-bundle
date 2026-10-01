@@ -1,4 +1,4 @@
-FROM fedora:44
+FROM fedora:46
 
 RUN dnf -y install nodejs npm && \
     dnf clean all
