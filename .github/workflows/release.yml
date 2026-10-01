@@ -22,7 +22,10 @@ jobs:
           package-manager-cache: false
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci --ignore-scripts
+
+      - name: Rebuild image-optimization binaries
+        run: npm rebuild gifsicle mozjpeg optipng-bin
 
       - name: Build UI bundle
         run: node_modules/.bin/gulp bundle
